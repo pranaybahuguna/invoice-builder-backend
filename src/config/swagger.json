@@ -95,7 +95,8 @@
             },
             "put" : {
                 "tags" : ["Invoices"],
-                "description" : "Update aw Invoice",
+                "description" : "Update an Invoice",
+                "summary" : "Update an existing Invoice",
                 "parameters" : [
                     {
                         "name" : "Invoice",
