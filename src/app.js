@@ -1,6 +1,9 @@
 import express from "express";
 import mongoose from "mongoose";
+import HttpStatus from "http-status-codes";
 import logger from "morgan";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./config/swagger.json";
 
 import { router } from "./config/routes";
 mongoose.Promise = global.Promise;
@@ -11,15 +14,20 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(logger("common"));
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, { explorer: true })
+);
 app.use("/api", router);
 app.use((req, res, next) => {
   const error = new Error("Invalid Route");
-  error.status = 404;
+  error.status = HttpStatus.NOT_FOUND;
   next(error);
 });
 
 app.use((error, req, res, next) => {
-  res.status(error.status || 500);
+  res.status(error.status || HttpStatus.INTERNAL_SERVER_ERROR);
   return res.json({
     error: {
       message: error.message
