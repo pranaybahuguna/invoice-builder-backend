@@ -23,6 +23,7 @@
             "post" : {
                 "tags" : ["Invoices"],
                 "description" : "Create a new Invoice",
+                "summary" : "Create a new Invoice",
                 "parameters" : [
                     {
                         "name" : "invoice",
