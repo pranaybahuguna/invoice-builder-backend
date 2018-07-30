@@ -23,6 +23,7 @@
             "post" : {
                 "tags" : ["Invoices"],
                 "description" : "Create a new Invoice",
+                "summary" : "Create a new Invoice",
                 "parameters" : [
                     {
                         "name" : "invoice",
@@ -95,7 +96,8 @@
             },
             "put" : {
                 "tags" : ["Invoices"],
-                "description" : "Update aw Invoice",
+                "description" : "Update an Invoice",
+                "summary" : "Update an existing Invoice",
                 "parameters" : [
                     {
                         "name" : "Invoice",

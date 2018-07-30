@@ -4,6 +4,7 @@ import HttpStatus from "http-status-codes";
 import logger from "morgan";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./config/swagger.json";
+import cors from "cors";
 
 import { router } from "./config/routes";
 mongoose.Promise = global.Promise;
@@ -13,6 +14,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+app.use(cors());
 app.use(logger("common"));
 app.use(
   "/api-docs",
