@@ -10,8 +10,26 @@ const dummyInvoices = [
 
 export default {
   findAll(req, res, next) {
-    Invoice.find()
-      .then(invoices => res.json(invoices))
+    const { page = 1, perPage = 10, filter } = req.query;
+    const options = {
+      page: parseInt(page, 10),
+      limit: parseInt(perPage, 10),
+      sort: {
+        date: "desc"
+      }
+    };
+    const query = {};
+    if (filter) {
+      query.item = {
+        $regex: filter
+      };
+    }
+    Invoice.paginate(query, options)
+      .then(invoices => {
+        setTimeout(() => {
+          res.json(invoices);
+        }, 1000);
+      })
       .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err));
   },
   create(req, res) {
