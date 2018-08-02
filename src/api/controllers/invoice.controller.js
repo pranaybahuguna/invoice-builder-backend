@@ -10,7 +10,7 @@ const dummyInvoices = [
 
 export default {
   findAll(req, res, next) {
-    const { page = 1, perPage = 10, filter } = req.query;
+    const { page = 1, perPage = 10, filter, sortField, sortDir } = req.query;
     const options = {
       page: parseInt(page, 10),
       limit: parseInt(perPage, 10),
@@ -24,6 +24,12 @@ export default {
         $regex: filter
       };
     }
+    if (sortField && sortDir) {
+      options.sort = {
+        [sortField]: sortDir
+      };
+    }
+
     Invoice.paginate(query, options)
       .then(invoices => {
         setTimeout(() => {
