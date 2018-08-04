@@ -13,12 +13,117 @@
         {
             "name" : "Invoices",
             "description" : "API for Invoices"
+        },
+        {
+            "name" : "Clients",
+            "description" : "API for Clients"
         }
     ],
     "schemes" : ["http"],
     "consumes" : ["application/json"],
     "produces" : ["application/json"],
     "paths" : {
+        "/clients" : {
+            "post" : {
+                "tags" : ["Clients"],
+                "description" : "Create a new Client",
+                "summary" : "Create a new Client",
+                "parameters" : [
+                    {
+                        "name" : "client",
+                        "description" : "client about to be created",
+                        "in" : "body",
+                        "required" : true,
+                        "schema" : {
+                            "$ref" : "#definitions/Client"
+                        }
+                    }
+                ],
+                "produces" : ["application/json"],
+                "responses" : {
+                    "200" : {
+                        "description" : "new client created",
+                        "schema" : {
+                            "$ref" : "#definitions/Client"
+                        }
+                    }
+                }
+            },
+            "get" : {
+                "tags" : ["Clients"],
+                "summary" : "Find all clients from server",
+                "description" : "All clients",
+                "responses" : {
+                    "200" : {
+                        "description" : "OK",
+                        "schema" : {
+                            "$ref" : "#definitions/Clients"
+                        }
+                    }
+                }
+            }
+        },
+        "/clients/{id}" : {
+            "parameters" : [
+                {
+                    "name" : "id",
+                    "in" : "path",
+                    "description" : "Enter client Id",
+                    "type" :"string"
+                }
+            ],
+            "get" : {
+                "tags" : ["Clients"],
+                "description" : "Find Client by Id",
+                "summary" : "Find single client",
+                "responses" : {
+                    "200" : {
+                        "description" : "Client Found",
+                        "schema" : {
+                            "$ref" : "#definitions/Client"
+                        }
+                    }
+                  }
+                },
+            "delete" : {
+                "tags" : ["Clients"],
+                "description" : "Delete Client by Id",
+                "summary" : "Delete single client",
+                "responses" : {
+                    "200" : {
+                        "description" : "Client Deleted",
+                        "schema" : {
+                            "$ref" : "#definitions/Client"
+                            }
+                        }
+                    }    
+            },
+            "put" : {
+                "tags" : ["Clients"],
+                "description" : "Update a client",
+                "summary" : "Update an existing client",
+                "parameters" : [
+                    {
+                        "name" : "Client",
+                        "description" : "client about to be updated",
+                        "in" : "body",
+                        "required" : true,
+                        "schema" : {
+                            "$ref" : "#definitions/UpdateClient"
+                        }
+                    }
+                ],
+                "produces" : ["application/json"],
+                "responses" : {
+                    "200" : {
+                        "description" : "Client Updated",
+                        "schema" : {
+                            "$ref" : "#definitions/Client"
+                        }
+                    }
+                }
+            }
+        },
         "/invoices" : {
             "post" : {
                 "tags" : ["Invoices"],
@@ -150,7 +255,7 @@
     },
     "definitions" : {
         "Invoice" : {            
-            "required" : ["item,qty,date,due"],
+            "required" : ["item,qty,date,due,client"],
             "properties" : {
                 "_id": {
                     "type": "string",
@@ -178,6 +283,27 @@
                 "tax": {
                     "type": "number",
                     "format" : "float"
+                },
+                "client" : {
+                    "type" : "string"
+                }
+            }
+        },
+        "Client" : {            
+            "required" : ["firstName,lastName,email"],
+            "properties" : {
+                "_id": {
+                    "type": "string",
+                    "uniqueItems" : true
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string" 
+                },
+                "email": {
+                    "type": "string"
                 }
             }
         },
@@ -205,6 +331,22 @@
                 "tax": {
                     "type": "number",
                     "format" : "float"
+                },
+                "client" : {
+                    "type" : "string"
+                }
+            }
+        },
+        "UpdateClient" : {            
+            "properties" : {
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string" 
+                },
+                "email": {
+                    "type": "string"
                 }
             }
         }
@@ -228,5 +370,11 @@
         "limit" : {
             "type" : "integer"
         }      
+    },
+    "Clients" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#definitions/Client"
+               }
     }
   }

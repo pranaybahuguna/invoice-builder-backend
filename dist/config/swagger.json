@@ -59,6 +59,21 @@
                     "type" : "integer",
                     "description" : "Define number of per page records",
                     "in" : "query"
+                },{
+                    "name" : "filter",
+                    "type" : "string",
+                    "description" : "Filter Invoices by item name",
+                    "in" : "query"
+                },{
+                    "name" : "sortField",
+                    "type" : "string",
+                    "description" : "Define the sort field for sorting",
+                    "in" : "query"
+                },{
+                    "name" : "sortDir",
+                    "type" : "string",
+                    "description" : "Define the sort sort direction for sorting in ascending/decending direction",
+                    "in" : "query"
                 }],
                 "responses" : {
                     "200" : {

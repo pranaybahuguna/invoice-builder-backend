@@ -1,4 +1,4 @@
-import Invoice from "../models/invoice.model";
+import Invoice from "./invoice.model";
 import Joi from "joi";
 import HttpStatus from "http-status-codes";
 
@@ -14,9 +14,7 @@ export default {
     const options = {
       page: parseInt(page, 10),
       limit: parseInt(perPage, 10),
-      sort: {
-        date: "desc"
-      }
+      populate: "client"
     };
     const query = {};
     if (filter) {
@@ -32,9 +30,7 @@ export default {
 
     Invoice.paginate(query, options)
       .then(invoices => {
-        setTimeout(() => {
-          res.json(invoices);
-        }, 1000);
+        res.json(invoices);
       })
       .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err));
   },
@@ -46,6 +42,7 @@ export default {
         .required(),
       date: Joi.date().required(),
       due: Joi.date().required(),
+      client: Joi.string().required(),
       tax: Joi.number().optional(),
       rate: Joi.number().optional()
     });
@@ -98,6 +95,7 @@ export default {
         .optional(),
       date: Joi.date().optional(),
       due: Joi.date().optional(),
+      client: Joi.string().optional(),
       tax: Joi.number().optional(),
       rate: Joi.number().optional()
     });
