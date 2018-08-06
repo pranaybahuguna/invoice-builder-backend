@@ -1,4 +1,4 @@
-import Invoice from "../models/invoice.model";
+import Invoice from "./invoice.model";
 import Joi from "joi";
 import HttpStatus from "http-status-codes";
 
@@ -13,10 +13,7 @@ export default {
     const { page = 1, perPage = 10, filter, sortField, sortDir } = req.query;
     const options = {
       page: parseInt(page, 10),
-      limit: parseInt(perPage, 10),
-      sort: {
-        date: "desc"
-      }
+      limit: parseInt(perPage, 10)
     };
     const query = {};
     if (filter) {

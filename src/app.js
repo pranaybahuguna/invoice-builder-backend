@@ -5,8 +5,8 @@ import logger from "morgan";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./config/swagger.json";
 import cors from "cors";
+import { restRouter } from "./api";
 
-import { router } from "./config/routes";
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost:27017/invoice-builder");
 
@@ -14,6 +14,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(logger("common"));
 app.use(
@@ -21,7 +22,7 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocument, { explorer: true })
 );
-app.use("/api", router);
+app.use("/api", restRouter);
 app.use((req, res, next) => {
   const error = new Error("Invalid Route");
   error.status = HttpStatus.NOT_FOUND;
