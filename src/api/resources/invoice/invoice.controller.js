@@ -13,7 +13,8 @@ export default {
     const { page = 1, perPage = 10, filter, sortField, sortDir } = req.query;
     const options = {
       page: parseInt(page, 10),
-      limit: parseInt(perPage, 10)
+      limit: parseInt(perPage, 10),
+      populate: "client"
     };
     const query = {};
     if (filter) {
@@ -29,9 +30,7 @@ export default {
 
     Invoice.paginate(query, options)
       .then(invoices => {
-        setTimeout(() => {
-          res.json(invoices);
-        }, 1000);
+        res.json(invoices);
       })
       .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err));
   },
@@ -43,6 +42,7 @@ export default {
         .required(),
       date: Joi.date().required(),
       due: Joi.date().required(),
+      client: Joi.string().required(),
       tax: Joi.number().optional(),
       rate: Joi.number().optional()
     });
@@ -95,6 +95,7 @@ export default {
         .optional(),
       date: Joi.date().optional(),
       due: Joi.date().optional(),
+      client: Joi.string().optional(),
       tax: Joi.number().optional(),
       rate: Joi.number().optional()
     });

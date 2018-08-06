@@ -1,0 +1,25 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.invoiceRouter = undefined;
+
+var _express = require("express");
+
+var _express2 = _interopRequireDefault(_express);
+
+var _invoice = require("./invoice.controller");
+
+var _invoice2 = _interopRequireDefault(_invoice);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var invoiceRouter = exports.invoiceRouter = _express2.default.Router();
+
+//Invoices
+
+invoiceRouter.route("/").post(_invoice2.default.create).get(_invoice2.default.findAll);
+
+invoiceRouter.route("/:id").get(_invoice2.default.findOne).delete(_invoice2.default.delete).put(_invoice2.default.update);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NyYy9hcGkvcmVzb3VyY2VzL2ludm9pY2UvaW52b2ljZS5yb3V0ZXIuanMiXSwibmFtZXMiOlsiaW52b2ljZVJvdXRlciIsImV4cHJlc3MiLCJSb3V0ZXIiLCJyb3V0ZSIsInBvc3QiLCJpbnZvaWNlQ29udHJvbGxlciIsImNyZWF0ZSIsImdldCIsImZpbmRBbGwiLCJmaW5kT25lIiwiZGVsZXRlIiwicHV0IiwidXBkYXRlIl0sIm1hcHBpbmdzIjoiOzs7Ozs7O0FBQUE7Ozs7QUFDQTs7Ozs7O0FBQ08sSUFBTUEsd0NBQWdCQyxrQkFBUUMsTUFBUixFQUF0Qjs7QUFFUDs7QUFFQUYsY0FDR0csS0FESCxDQUNTLEdBRFQsRUFFR0MsSUFGSCxDQUVRQyxrQkFBa0JDLE1BRjFCLEVBR0dDLEdBSEgsQ0FHT0Ysa0JBQWtCRyxPQUh6Qjs7QUFLQVIsY0FDR0csS0FESCxDQUNTLE1BRFQsRUFFR0ksR0FGSCxDQUVPRixrQkFBa0JJLE9BRnpCLEVBR0dDLE1BSEgsQ0FHVUwsa0JBQWtCSyxNQUg1QixFQUlHQyxHQUpILENBSU9OLGtCQUFrQk8sTUFKekIiLCJmaWxlIjoiaW52b2ljZS5yb3V0ZXIuanMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgZXhwcmVzcyBmcm9tIFwiZXhwcmVzc1wiO1xyXG5pbXBvcnQgaW52b2ljZUNvbnRyb2xsZXIgZnJvbSBcIi4vaW52b2ljZS5jb250cm9sbGVyXCI7XHJcbmV4cG9ydCBjb25zdCBpbnZvaWNlUm91dGVyID0gZXhwcmVzcy5Sb3V0ZXIoKTtcclxuXHJcbi8vSW52b2ljZXNcclxuXHJcbmludm9pY2VSb3V0ZXJcclxuICAucm91dGUoXCIvXCIpXHJcbiAgLnBvc3QoaW52b2ljZUNvbnRyb2xsZXIuY3JlYXRlKVxyXG4gIC5nZXQoaW52b2ljZUNvbnRyb2xsZXIuZmluZEFsbCk7XHJcblxyXG5pbnZvaWNlUm91dGVyXHJcbiAgLnJvdXRlKFwiLzppZFwiKVxyXG4gIC5nZXQoaW52b2ljZUNvbnRyb2xsZXIuZmluZE9uZSlcclxuICAuZGVsZXRlKGludm9pY2VDb250cm9sbGVyLmRlbGV0ZSlcclxuICAucHV0KGludm9pY2VDb250cm9sbGVyLnVwZGF0ZSk7XHJcbiJdfQ==

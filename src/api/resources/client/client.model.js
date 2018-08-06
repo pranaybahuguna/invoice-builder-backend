@@ -2,16 +2,16 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 const Client = new Schema({
-  fisrstName: {
+  firstName: {
     type: String,
     required: true
   },
   lastName: {
-    type: Number,
+    type: String,
     required: true
   },
   email: {
-    type: Date,
+    type: String,
     required: true
   }
 });

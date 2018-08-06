@@ -1,0 +1,75 @@
+"use strict";
+
+var _express = require("express");
+
+var _express2 = _interopRequireDefault(_express);
+
+var _mongoose = require("mongoose");
+
+var _mongoose2 = _interopRequireDefault(_mongoose);
+
+var _httpStatusCodes = require("http-status-codes");
+
+var _httpStatusCodes2 = _interopRequireDefault(_httpStatusCodes);
+
+var _morgan = require("morgan");
+
+var _morgan2 = _interopRequireDefault(_morgan);
+
+var _swaggerUiExpress = require("swagger-ui-express");
+
+var _swaggerUiExpress2 = _interopRequireDefault(_swaggerUiExpress);
+
+var _swagger = require("./config/swagger.json");
+
+var _swagger2 = _interopRequireDefault(_swagger);
+
+var _cors = require("cors");
+
+var _cors2 = _interopRequireDefault(_cors);
+
+var _api = require("./api");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_mongoose2.default.Promise = global.Promise;
+_mongoose2.default.connect("mongodb://localhost:27017/invoice-builder");
+
+var app = (0, _express2.default)();
+var PORT = 3000;
+
+app.use(_express2.default.json());
+app.use(_express2.default.urlencoded({ extended: true }));
+app.use((0, _cors2.default)());
+app.use((0, _morgan2.default)("common"));
+app.use("/api-docs", _swaggerUiExpress2.default.serve, _swaggerUiExpress2.default.setup(_swagger2.default, { explorer: true }));
+app.use("/api", _api.restRouter);
+app.use(function (req, res, next) {
+  var error = new Error("Invalid Route");
+  error.status = _httpStatusCodes2.default.NOT_FOUND;
+  next(error);
+});
+
+app.use(function (error, req, res, next) {
+  res.status(error.status || _httpStatusCodes2.default.INTERNAL_SERVER_ERROR);
+  return res.json({
+    error: {
+      message: error.message
+    }
+  });
+});
+
+app.get("/", function (req, res) {
+  res.json({
+    msg: "Welcome to invoice builder backend"
+  });
+});
+
+app.get("/invoices", function (req, res) {
+  res.json(invoices);
+});
+
+app.listen(PORT, function () {
+  console.log("Server is running at PORT " + PORT);
+});
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3NyYy9hcHAuanMiXSwibmFtZXMiOlsibW9uZ29vc2UiLCJQcm9taXNlIiwiZ2xvYmFsIiwiY29ubmVjdCIsImFwcCIsIlBPUlQiLCJ1c2UiLCJleHByZXNzIiwianNvbiIsInVybGVuY29kZWQiLCJleHRlbmRlZCIsInN3YWdnZXJVaSIsInNlcnZlIiwic2V0dXAiLCJzd2FnZ2VyRG9jdW1lbnQiLCJleHBsb3JlciIsInJlc3RSb3V0ZXIiLCJyZXEiLCJyZXMiLCJuZXh0IiwiZXJyb3IiLCJFcnJvciIsInN0YXR1cyIsIkh0dHBTdGF0dXMiLCJOT1RfRk9VTkQiLCJJTlRFUk5BTF9TRVJWRVJfRVJST1IiLCJtZXNzYWdlIiwiZ2V0IiwibXNnIiwiaW52b2ljZXMiLCJsaXN0ZW4iLCJjb25zb2xlIiwibG9nIl0sIm1hcHBpbmdzIjoiOztBQUFBOzs7O0FBQ0E7Ozs7QUFDQTs7OztBQUNBOzs7O0FBQ0E7Ozs7QUFDQTs7OztBQUNBOzs7O0FBQ0E7Ozs7QUFFQUEsbUJBQVNDLE9BQVQsR0FBbUJDLE9BQU9ELE9BQTFCO0FBQ0FELG1CQUFTRyxPQUFULENBQWlCLDJDQUFqQjs7QUFFQSxJQUFNQyxNQUFNLHdCQUFaO0FBQ0EsSUFBTUMsT0FBTyxJQUFiOztBQUVBRCxJQUFJRSxHQUFKLENBQVFDLGtCQUFRQyxJQUFSLEVBQVI7QUFDQUosSUFBSUUsR0FBSixDQUFRQyxrQkFBUUUsVUFBUixDQUFtQixFQUFFQyxVQUFVLElBQVosRUFBbkIsQ0FBUjtBQUNBTixJQUFJRSxHQUFKLENBQVEscUJBQVI7QUFDQUYsSUFBSUUsR0FBSixDQUFRLHNCQUFPLFFBQVAsQ0FBUjtBQUNBRixJQUFJRSxHQUFKLENBQ0UsV0FERixFQUVFSywyQkFBVUMsS0FGWixFQUdFRCwyQkFBVUUsS0FBVixDQUFnQkMsaUJBQWhCLEVBQWlDLEVBQUVDLFVBQVUsSUFBWixFQUFqQyxDQUhGO0FBS0FYLElBQUlFLEdBQUosQ0FBUSxNQUFSLEVBQWdCVSxlQUFoQjtBQUNBWixJQUFJRSxHQUFKLENBQVEsVUFBQ1csR0FBRCxFQUFNQyxHQUFOLEVBQVdDLElBQVgsRUFBb0I7QUFDMUIsTUFBTUMsUUFBUSxJQUFJQyxLQUFKLENBQVUsZUFBVixDQUFkO0FBQ0FELFFBQU1FLE1BQU4sR0FBZUMsMEJBQVdDLFNBQTFCO0FBQ0FMLE9BQUtDLEtBQUw7QUFDRCxDQUpEOztBQU1BaEIsSUFBSUUsR0FBSixDQUFRLFVBQUNjLEtBQUQsRUFBUUgsR0FBUixFQUFhQyxHQUFiLEVBQWtCQyxJQUFsQixFQUEyQjtBQUNqQ0QsTUFBSUksTUFBSixDQUFXRixNQUFNRSxNQUFOLElBQWdCQywwQkFBV0UscUJBQXRDO0FBQ0EsU0FBT1AsSUFBSVYsSUFBSixDQUFTO0FBQ2RZLFdBQU87QUFDTE0sZUFBU04sTUFBTU07QUFEVjtBQURPLEdBQVQsQ0FBUDtBQUtELENBUEQ7O0FBU0F0QixJQUFJdUIsR0FBSixDQUFRLEdBQVIsRUFBYSxVQUFDVixHQUFELEVBQU1DLEdBQU4sRUFBYztBQUN6QkEsTUFBSVYsSUFBSixDQUFTO0FBQ1BvQixTQUFLO0FBREUsR0FBVDtBQUdELENBSkQ7O0FBTUF4QixJQUFJdUIsR0FBSixDQUFRLFdBQVIsRUFBcUIsVUFBQ1YsR0FBRCxFQUFNQyxHQUFOLEVBQWM7QUFDakNBLE1BQUlWLElBQUosQ0FBU3FCLFFBQVQ7QUFDRCxDQUZEOztBQUlBekIsSUFBSTBCLE1BQUosQ0FBV3pCLElBQVgsRUFBaUIsWUFBTTtBQUNyQjBCLFVBQVFDLEdBQVIsZ0NBQXlDM0IsSUFBekM7QUFDRCxDQUZEIiwiZmlsZSI6ImFwcC5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBleHByZXNzIGZyb20gXCJleHByZXNzXCI7XHJcbmltcG9ydCBtb25nb29zZSBmcm9tIFwibW9uZ29vc2VcIjtcclxuaW1wb3J0IEh0dHBTdGF0dXMgZnJvbSBcImh0dHAtc3RhdHVzLWNvZGVzXCI7XHJcbmltcG9ydCBsb2dnZXIgZnJvbSBcIm1vcmdhblwiO1xyXG5pbXBvcnQgc3dhZ2dlclVpIGZyb20gXCJzd2FnZ2VyLXVpLWV4cHJlc3NcIjtcclxuaW1wb3J0IHN3YWdnZXJEb2N1bWVudCBmcm9tIFwiLi9jb25maWcvc3dhZ2dlci5qc29uXCI7XHJcbmltcG9ydCBjb3JzIGZyb20gXCJjb3JzXCI7XHJcbmltcG9ydCB7IHJlc3RSb3V0ZXIgfSBmcm9tIFwiLi9hcGlcIjtcclxuXHJcbm1vbmdvb3NlLlByb21pc2UgPSBnbG9iYWwuUHJvbWlzZTtcclxubW9uZ29vc2UuY29ubmVjdChcIm1vbmdvZGI6Ly9sb2NhbGhvc3Q6MjcwMTcvaW52b2ljZS1idWlsZGVyXCIpO1xyXG5cclxuY29uc3QgYXBwID0gZXhwcmVzcygpO1xyXG5jb25zdCBQT1JUID0gMzAwMDtcclxuXHJcbmFwcC51c2UoZXhwcmVzcy5qc29uKCkpO1xyXG5hcHAudXNlKGV4cHJlc3MudXJsZW5jb2RlZCh7IGV4dGVuZGVkOiB0cnVlIH0pKTtcclxuYXBwLnVzZShjb3JzKCkpO1xyXG5hcHAudXNlKGxvZ2dlcihcImNvbW1vblwiKSk7XHJcbmFwcC51c2UoXHJcbiAgXCIvYXBpLWRvY3NcIixcclxuICBzd2FnZ2VyVWkuc2VydmUsXHJcbiAgc3dhZ2dlclVpLnNldHVwKHN3YWdnZXJEb2N1bWVudCwgeyBleHBsb3JlcjogdHJ1ZSB9KVxyXG4pO1xyXG5hcHAudXNlKFwiL2FwaVwiLCByZXN0Um91dGVyKTtcclxuYXBwLnVzZSgocmVxLCByZXMsIG5leHQpID0+IHtcclxuICBjb25zdCBlcnJvciA9IG5ldyBFcnJvcihcIkludmFsaWQgUm91dGVcIik7XHJcbiAgZXJyb3Iuc3RhdHVzID0gSHR0cFN0YXR1cy5OT1RfRk9VTkQ7XHJcbiAgbmV4dChlcnJvcik7XHJcbn0pO1xyXG5cclxuYXBwLnVzZSgoZXJyb3IsIHJlcSwgcmVzLCBuZXh0KSA9PiB7XHJcbiAgcmVzLnN0YXR1cyhlcnJvci5zdGF0dXMgfHwgSHR0cFN0YXR1cy5JTlRFUk5BTF9TRVJWRVJfRVJST1IpO1xyXG4gIHJldHVybiByZXMuanNvbih7XHJcbiAgICBlcnJvcjoge1xyXG4gICAgICBtZXNzYWdlOiBlcnJvci5tZXNzYWdlXHJcbiAgICB9XHJcbiAgfSk7XHJcbn0pO1xyXG5cclxuYXBwLmdldChcIi9cIiwgKHJlcSwgcmVzKSA9PiB7XHJcbiAgcmVzLmpzb24oe1xyXG4gICAgbXNnOiBcIldlbGNvbWUgdG8gaW52b2ljZSBidWlsZGVyIGJhY2tlbmRcIlxyXG4gIH0pO1xyXG59KTtcclxuXHJcbmFwcC5nZXQoXCIvaW52b2ljZXNcIiwgKHJlcSwgcmVzKSA9PiB7XHJcbiAgcmVzLmpzb24oaW52b2ljZXMpO1xyXG59KTtcclxuXHJcbmFwcC5saXN0ZW4oUE9SVCwgKCkgPT4ge1xyXG4gIGNvbnNvbGUubG9nKGBTZXJ2ZXIgaXMgcnVubmluZyBhdCBQT1JUICR7UE9SVH1gKTtcclxufSk7XHJcbiJdfQ==
