@@ -1,7 +1,9 @@
 import userService from "./user.service";
 import User from "./user.model";
+import jwt from "jsonwebtoken";
 import HttpStatus from "http-status-codes";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
+import { devConfig } from "../../../config/env/development";
 
 export default {
   async signup(req, res) {
@@ -28,16 +30,24 @@ export default {
           .status(HttpStatus.BAD_REQUEST)
           .json({ err: "invalid email or password" });
       }
-      const matched = bcrypt.compare(value.password, user.password);
-      console.log(matched);
+      const matched = await bcryptjs.compare(value.password, user.password);
       if (!matched) {
         return res
           .status(HttpStatus.UNAUTHORIZED)
           .json({ err: "invalid credentials" });
       }
-      return res.json({ success: true, message: "logged in successfully" });
+      jwt.sign(
+        { id: user._id },
+        devConfig.secret,
+        { expiresIn: "1d" },
+        function(err, token) {
+          return res.json({ success: true, token });
+        }
+      );
     } catch (err) {
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error.message);
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json(HttpStatus.INTERNAL_SERVER_ERROR, err.message);
     }
   }
 };
