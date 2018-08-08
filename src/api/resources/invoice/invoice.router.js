@@ -1,16 +1,32 @@
 import express from "express";
 import invoiceController from "./invoice.controller";
+import passport from "passport";
 export const invoiceRouter = express.Router();
 
 //Invoices
 
 invoiceRouter
   .route("/")
-  .post(invoiceController.create)
-  .get(invoiceController.findAll);
+  .post(
+    passport.authenticate("jwt", { session: false }),
+    invoiceController.create
+  )
+  .get(
+    passport.authenticate("jwt", { session: false }),
+    invoiceController.findAll
+  );
 
 invoiceRouter
   .route("/:id")
-  .get(invoiceController.findOne)
-  .delete(invoiceController.delete)
-  .put(invoiceController.update);
+  .get(
+    passport.authenticate("jwt", { session: false }),
+    invoiceController.findOne
+  )
+  .delete(
+    passport.authenticate("jwt", { session: false }),
+    invoiceController.delete
+  )
+  .put(
+    passport.authenticate("jwt", { session: false }),
+    invoiceController.update
+  );
