@@ -6,17 +6,21 @@ import bcryptjs from "bcryptjs";
 import { devConfig } from "../../../config/env/development";
 
 export default {
-  async signup(req, res) {
-    try {
-      const { value, error } = userService.validateSignupSchema(req.body);
-      if (error && error.details) {
-        return res.status(HttpStatus.BAD_REQUEST).json(error.message);
-      }
-      const user = await User.create(value);
-      return res.json({ success: true, message: "user created successfully" });
-    } catch (err) {
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error.message);
+  signup(req, res) {
+    const { value, error } = userService.validateSignupSchema(req.body);
+    if (error && error.details) {
+      res.status(HttpStatus.BAD_REQUEST).json(error.message);
     }
+    User.create(value)
+      .then(data => {
+        res.json({
+          success: true,
+          message: "user created successfully"
+        });
+      })
+      .catch(err => {
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err.message);
+      });
   },
   async login(req, res) {
     try {
