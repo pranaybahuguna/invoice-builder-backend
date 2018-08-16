@@ -17,7 +17,6 @@ export const configureJWTStrategy = () => {
           return done(null, user);
         } else {
           return done(null, false);
-          // or you could create a new account
         }
       });
     })
