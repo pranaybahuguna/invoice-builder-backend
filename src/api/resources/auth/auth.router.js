@@ -1,19 +1,22 @@
 import express from "express";
 import passport from "passport";
+import authController from "./auth.controller";
 
 export const authRouter = express.Router();
+
+authRouter.route("/test").get((req, res) => {
+  res.json({ msg: "working" });
+});
 
 authRouter.get(
   "/google",
   passport.authenticate("google", {
-    scope: ["https://www.googleapis.com/auth/plus.login"]
+    scope: ["profile", "email"]
   })
 );
 
 authRouter.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
-  (req, res) => {
-    res.json({ msg: "authenticated" });
-  }
+  passport.authenticate("google", { failureRedirect: "/failure" }),
+  authController.sendJWTToken
 );

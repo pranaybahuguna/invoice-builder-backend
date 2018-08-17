@@ -8,6 +8,7 @@ import session from "express-session";
 import { configureJWTStrategy } from "./passport-jwt";
 import { configureGoogleStrategy } from "./passport-google";
 import { devConfig } from "../../config/env/development";
+import User from "../resources/user/user.model";
 
 export const setGlobalMiddleware = app => {
   app.use(express.json());
@@ -16,6 +17,8 @@ export const setGlobalMiddleware = app => {
   app.use(logger("common"));
   app.use(passport.initialize({ userProperty: "currentUser" }));
   app.use(passport.session());
+  configureJWTStrategy();
+  configureGoogleStrategy();
   app.use(
     session({
       secret: devConfig.secret,
@@ -23,15 +26,14 @@ export const setGlobalMiddleware = app => {
       saveUninitialized: true
     })
   );
-  configureJWTStrategy();
-  configureGoogleStrategy();
-
   passport.serializeUser((user, done) => {
-    done(null, user.id);
+    done(null, user._id.toJSON());
   });
 
   passport.deserializeUser((id, done) => {
-    done(null, { id: "Something" });
+    User.findById(id, (err, user) => {
+      done(null, user);
+    });
   });
 
   app.use(

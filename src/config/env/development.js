@@ -4,8 +4,8 @@ export const devConfig = {
   secret: "AESCReND12d",
   google: {
     clientId:
-      "179544937848-emcb3dfugh6js8jrssco4i1d552lkci1.apps.googleusercontent.com",
-    clientSecret: "GLuXOu5eJWFngXbdqr1psrLJ",
+      "179544937848-un871s8iraukh7ve609fontf7jn0g9ju.apps.googleusercontent.com",
+    clientSecret: "AkwWaiC9aenJzs8kJqN38Jps",
     callbackURL: "http://localhost:3000/api/auth/google/callback"
   }
 };
