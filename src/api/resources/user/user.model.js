@@ -11,6 +11,12 @@ const User = new Schema({
     id: String,
     displayName: String,
     token: String
+  },
+  github: {
+    email: String,
+    id: String,
+    displayName: String,
+    token: String
   }
 });
 export default mongoose.model("User", User);

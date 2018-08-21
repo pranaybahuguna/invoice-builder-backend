@@ -20,3 +20,17 @@ authRouter.get(
   passport.authenticate("google", { failureRedirect: "/failure" }),
   authController.sendJWTToken
 );
+
+authRouter.get("/github", passport.authenticate("github"));
+
+authRouter.get(
+  "/github/callback",
+  passport.authenticate("github", { failureRedirect: "/failure" }),
+  authController.sendJWTToken
+);
+
+authRouter.get(
+  "/authenticate",
+  passport.authenticate("jwt", { session: false }),
+  authController.authenticate
+);

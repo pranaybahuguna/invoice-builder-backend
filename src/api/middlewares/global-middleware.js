@@ -7,6 +7,7 @@ import passport from "passport";
 import session from "express-session";
 import { configureJWTStrategy } from "./passport-jwt";
 import { configureGoogleStrategy } from "./passport-google";
+import { configureGithubStrategy } from "./passport-github";
 import { devConfig } from "../../config/env/development";
 import User from "../resources/user/user.model";
 
@@ -14,11 +15,12 @@ export const setGlobalMiddleware = app => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cors());
-  app.use(logger("common"));
+  app.use(logger("dev"));
   app.use(passport.initialize({ userProperty: "currentUser" }));
   app.use(passport.session());
   configureJWTStrategy();
   configureGoogleStrategy();
+  configureGithubStrategy();
   app.use(
     session({
       secret: devConfig.secret,
@@ -41,4 +43,7 @@ export const setGlobalMiddleware = app => {
     swaggerUi.serve,
     swaggerUi.setup(swaggerDocument, { explorer: true })
   );
+  app.get("failure", (req, res) => {
+    return res.redirect("http://localhost:4200");
+  });
 };
