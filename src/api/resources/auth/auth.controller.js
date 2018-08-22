@@ -16,5 +16,9 @@ export default {
 
   authenticate(req, res) {
     return res.send(true);
+  },
+  logout(req, res) {
+    req.logout();
+    return res.json({ success: true });
   }
 };
