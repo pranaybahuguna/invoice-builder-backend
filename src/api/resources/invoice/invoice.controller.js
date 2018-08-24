@@ -59,6 +59,7 @@ export default {
   findOne(req, res) {
     let { id } = req.params;
     Invoice.findById(id)
+      .populate("client")
       .then(invoice => {
         if (!invoice) {
           return res

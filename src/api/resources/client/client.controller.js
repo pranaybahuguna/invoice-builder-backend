@@ -21,7 +21,6 @@ export default {
       })
       .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err));
   },
-
   findOne(req, res) {
     let { id } = req.params;
     Client.findById(id)
@@ -37,7 +36,6 @@ export default {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err);
       });
   },
-
   delete(req, res) {
     const { id } = req.params;
     Client.findByIdAndRemove(id)
@@ -53,7 +51,6 @@ export default {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(err);
       });
   },
-
   update(req, res) {
     const { id } = req.params;
     const { value, error } = clientService.validateUpdateSchema(req.body);
