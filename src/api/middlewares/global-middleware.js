@@ -10,11 +10,13 @@ import { configureGoogleStrategy } from "./passport-google";
 import { configureGithubStrategy } from "./passport-github";
 import { devConfig } from "../../config/env/development";
 import User from "../resources/user/user.model";
+import pdf from "express-pdf";
 
 export const setGlobalMiddleware = app => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cors());
+  app.use(pdf);
   app.use(logger("dev"));
   app.use(passport.initialize({ userProperty: "currentUser" }));
   app.use(passport.session());

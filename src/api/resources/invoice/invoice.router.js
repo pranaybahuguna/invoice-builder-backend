@@ -30,3 +30,4 @@ invoiceRouter
     passport.authenticate("jwt", { session: false }),
     invoiceController.update
   );
+invoiceRouter.get("/:id/download", invoiceController.download);
