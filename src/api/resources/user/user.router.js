@@ -10,3 +10,9 @@ userRouter.post(
   passport.authenticate("jwt", { session: false }),
   userController.test
 );
+userRouter.post("/forgot-password", userController.forgotPassword);
+userRouter.put(
+  "/reset-password",
+  passport.authenticate("jwt", { session: false }),
+  userController.resetPassword
+);

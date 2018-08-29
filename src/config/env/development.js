@@ -13,5 +13,11 @@ export const devConfig = {
     clientId: "34f92d1c4fe8a29b1ccb",
     clientSecret: "f6b36dbc1871b85eaf23dc8c89cd377b0cceccc4",
     callbackURL: "http://localhost:3000/api/auth/github/callback"
+  },
+  ethereal: {
+    username: "suu3rmzxkco77f4z@ethereal.email",
+    pasword: " nxVMcnszMMDvhRzNEv",
+    host: "smtp.ethereal.email",
+    port: 587
   }
 };

@@ -6,6 +6,20 @@ export default {
       email: Joi.string()
         .email()
         .required(),
+      name: Joi.string().required(),
+      password: Joi.string()
+    });
+    const { error, value } = Joi.validate(body, schema);
+    if (error && error.details) {
+      return { error };
+    }
+    return { value };
+  },
+  validateLoginSchema(body) {
+    const schema = Joi.object().keys({
+      email: Joi.string()
+        .email()
+        .required(),
       password: Joi.string().required()
     });
     const { error, value } = Joi.validate(body, schema);
@@ -44,5 +58,17 @@ export default {
     }
 
     return rsp;
+  },
+  validateForgotSchema(body) {
+    const schema = Joi.object().keys({
+      email: Joi.string()
+        .email()
+        .required()
+    });
+    const { error, value } = Joi.validate(body, schema);
+    if (error && error.details) {
+      return { error };
+    }
+    return { value };
   }
 };
