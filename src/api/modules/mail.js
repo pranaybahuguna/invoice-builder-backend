@@ -4,14 +4,23 @@ import { devConfig } from "../../config/env/development";
 
 export const sendEmail = options =>
   new Promise((resolve, reject) => {
-    const transpoter = nodemailer.createTransport({
-      host: devConfig.ethereal.host,
-      port: devConfig.ethereal.port,
+    let transpoter = null;
+    transpoter = nodemailer.createTransport({
+      service: "gmail",
       auth: {
-        user: devConfig.ethereal.username,
-        pass: devConfig.ethereal.password
+        user: "meanapp.noreply@gmail.com", //devConfig.meanAppGmail.email,
+        pass: "nxVMcnszMMDvhRzNEv" //devConfig.meanAppGmail.password
       }
     });
+    /*transpoter = nodemailer.createTransport({
+        host: devConfig.ethereal.host,
+        port: devConfig.ethereal.port,
+        auth: {
+          user: devConfig.ethereal.username,
+          pass: devConfig.ethereal.password
+        }
+      });*/
+
     const text = htmlToText.fromString(options.html, {
       wordwrap: 130
     });

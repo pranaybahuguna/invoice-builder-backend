@@ -19,5 +19,9 @@ export const devConfig = {
     pasword: " nxVMcnszMMDvhRzNEv",
     host: "smtp.ethereal.email",
     port: 587
+  },
+  meanAppGmail: {
+    email: "meanapp.noreply@gmail.com",
+    password: "nxVMcnszMMDvhRzNEv"
   }
 };
