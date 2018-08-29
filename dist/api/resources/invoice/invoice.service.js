@@ -1,112 +1,30 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
-
-var _regenerator = require("babel-runtime/regenerator");
-
-var _regenerator2 = _interopRequireDefault(_regenerator);
-
-var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
-
-var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 exports.default = {
-  getTotal: function () {
-    var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(invoice) {
-      var total, subTotal, salesTax;
-      return _regenerator2.default.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              total = 0;
-              subTotal = 0;
+    getTotal: function getTotal(invoice) {
+        var total = 0;
+        var subTotal = 0;
 
-
-              if (typeof invoice.qty !== "undefined" && typeof invoice.rate !== "undefined") {
-                total = invoice.qty * invoice.rate;
-              }
-              salesTax = 0;
-
-              if (typeof invoice.tax !== "undefined") {
-                salesTax = total * invoice.tax / 100;
-              }
-              subTotal = total + salesTax;
-              return _context.abrupt("return", { total: total, subTotal: subTotal });
-
-            case 7:
-            case "end":
-              return _context.stop();
-          }
+        if (typeof invoice.qty !== "undefined" && typeof invoice.rate !== "undefined") {
+            total = invoice.qty * invoice.rate;
         }
-      }, _callee, this);
-    }));
-
-    function getTotal(_x) {
-      return _ref.apply(this, arguments);
-    }
-
-    return getTotal;
-  }(),
-  getTemplateBody: function () {
-    var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(invoice, subTotal, total, user) {
-      var id, _invoice, _invoiceService$getTo, _subTotal, _total, _user, templateBody, html;
-
-      return _regenerator2.default.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              id = req.params.id;
-              _context2.next = 4;
-              return Invoice.findById(id).populate("client");
-
-            case 4:
-              _invoice = _context2.sent;
-
-              if (_invoice) {
-                _context2.next = 7;
-                break;
-              }
-
-              return _context2.abrupt("return", res.status(NOT_FOUND).send({ err: "could not find any invice" }));
-
-            case 7:
-              _invoiceService$getTo = invoiceService.getTotal(_invoice), _subTotal = _invoiceService$getTo.subTotal, _total = _invoiceService$getTo.total;
-              _user = userService.getUser(req.currentUser);
-              templateBody = invoiceService.getTemplateBody(_invoice, _subTotal, _total, _user);
-              html = invoiceService.getInvoiceTemplate(templateBody);
-
-              res.pdfFromHTML({
-                filename: _invoice.item + ".pdf",
-                htmlContent: html
-              });
-              _context2.next = 18;
-              break;
-
-            case 14:
-              _context2.prev = 14;
-              _context2.t0 = _context2["catch"](0);
-
-              console.error(_context2.t0);
-              return _context2.abrupt("return", res.status(500).send(_context2.t0));
-
-            case 18:
-            case "end":
-              return _context2.stop();
-          }
+        var salesTax = 0;
+        if (typeof invoice.tax !== "undefined") {
+            salesTax = total * invoice.tax / 100;
         }
-      }, _callee2, this, [[0, 14]]);
-    }));
-
-    function getTemplateBody(_x2, _x3, _x4, _x5) {
-      return _ref2.apply(this, arguments);
+        subTotal = total + salesTax;
+        return { total: total, subTotal: subTotal };
+    },
+    getTemplateBody: function getTemplateBody(invoice, subTotal, total, user) {
+        var templateBody = "\n    <div class=\"container\">\n  <div class=\"row\">\n      <div class=\"col-xs-6\">\n      </div>\n      <div class=\"col-xs-6 text-right\">\n          <h1>INVOICE</h1>\n          <h1>\n              <small>" + invoice.item + "</small>\n          </h1>\n      </div>\n  </div>\n  <div class=\"row\">\n      <div class=\"col-xs-5\">\n          <div class=\"panel panel-default\">\n              <div class=\"panel-heading\">\n                  <h4>From:\n                      <a>" + user.name + "</a>\n                  </h4>\n              </div>\n              <div class=\"panel-body\">\n                  <p>\n                      " + user.email + "\n                      <br>\n                  </p>\n              </div>\n          </div>\n      </div>\n      <div class=\"col-xs-5 col-xs-offset-2 text-right\">\n          <div class=\"panel panel-default\">\n              <div class=\"panel-heading\">\n                  <h4>To :\n                      <a>" + invoice.client.firstName + " " + invoice.client.lastName + "</a>\n                  </h4>\n              </div>\n              <div class=\"panel-body\">\n                  <p>\n                      " + invoice.client.email + "\n                      <br>\n                  </p>\n              </div>\n          </div>\n      </div>\n  </div>\n  <table class=\"table table-bordered\">\n      <thead>\n          <tr>\n              <th>\n                  <h4>Qty</h4>\n              </th>\n              <th>\n                  <h4>Rate</h4>\n              </th>\n              <th>\n                  <h4>Tax</h4>\n              </th>\n          </tr>\n      </thead>\n      <tbody>\n          <tr>\n              <td>" + invoice.qty + "</td>\n              <td>" + invoice.rate + "</td>\n              <td>\n                  " + invoice.tax + "\n              </td>\n          </tr>\n      </tbody>\n  </table>\n  <div class=\"row text-right\">\n      <div class=\"col-xs-2 col-xs-offset-8\">\n          <p>\n              <strong>\n                  Sub Total :\n                  <br> TAX :\n                  <br> Total :\n                  <br>\n              </strong>\n          </p>\n      </div>\n      <div class=\"col-xs-2\">\n          <strong>\n              $" + subTotal + "\n              <br> $" + invoice.tax + "\n              <br> $" + total + "\n              <br>\n          </strong>\n      </div>\n  </div>\n</div>\n    ";
+        return templateBody;
+    },
+    getInvoiceTemplate: function getInvoiceTemplate(templateBody, subTotal, total) {
+        var html = "\n    <html>\n    <head>\n    <title> Invoice </title>\n    <link href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" rel=\"stylesheet\">\n     <style>\n     @import url(http://fonts.googleapis.com/css?family=Bree+Serif);\n     body, h1, h2, h3, h4, h5, h6{\n     font-family: 'Bree Serif', serif;\n     }\n     </style>\n    </head>\n\n    <body>\n       " + templateBody + "\n    </body>\n    </html>\n    ";
+        return html;
     }
-
-    return getTemplateBody;
-  }()
 };
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NyYy9hcGkvcmVzb3VyY2VzL2ludm9pY2UvaW52b2ljZS5zZXJ2aWNlLmpzIl0sIm5hbWVzIjpbImdldFRvdGFsIiwiaW52b2ljZSIsInRvdGFsIiwic3ViVG90YWwiLCJxdHkiLCJyYXRlIiwic2FsZXNUYXgiLCJ0YXgiLCJnZXRUZW1wbGF0ZUJvZHkiLCJ1c2VyIiwiaWQiLCJyZXEiLCJwYXJhbXMiLCJJbnZvaWNlIiwiZmluZEJ5SWQiLCJwb3B1bGF0ZSIsInJlcyIsInN0YXR1cyIsIk5PVF9GT1VORCIsInNlbmQiLCJlcnIiLCJpbnZvaWNlU2VydmljZSIsInVzZXJTZXJ2aWNlIiwiZ2V0VXNlciIsImN1cnJlbnRVc2VyIiwidGVtcGxhdGVCb2R5IiwiaHRtbCIsImdldEludm9pY2VUZW1wbGF0ZSIsInBkZkZyb21IVE1MIiwiZmlsZW5hbWUiLCJpdGVtIiwiaHRtbENvbnRlbnQiLCJjb25zb2xlIiwiZXJyb3IiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7a0JBQWU7QUFDUEEsVUFETztBQUFBLHlHQUNFQyxPQURGO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUVQQyxtQkFGTyxHQUVDLENBRkQ7QUFHUEMsc0JBSE8sR0FHSSxDQUhKOzs7QUFLWCxrQkFDRSxPQUFPRixRQUFRRyxHQUFmLEtBQXVCLFdBQXZCLElBQ0EsT0FBT0gsUUFBUUksSUFBZixLQUF3QixXQUYxQixFQUdFO0FBQ0FILHdCQUFRRCxRQUFRRyxHQUFSLEdBQWNILFFBQVFJLElBQTlCO0FBQ0Q7QUFDR0Msc0JBWE8sR0FXSSxDQVhKOztBQVlYLGtCQUFJLE9BQU9MLFFBQVFNLEdBQWYsS0FBdUIsV0FBM0IsRUFBd0M7QUFDdENELDJCQUFZSixRQUFRRCxRQUFRTSxHQUFqQixHQUF3QixHQUFuQztBQUNEO0FBQ0RKLHlCQUFXRCxRQUFRSSxRQUFuQjtBQWZXLCtDQWdCSixFQUFFSixZQUFGLEVBQVNDLGtCQUFULEVBaEJJOztBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBOztBQUFBO0FBQUE7QUFBQTs7QUFBQTtBQUFBO0FBa0JQSyxpQkFsQk87QUFBQSwyR0FrQlNQLE9BbEJULEVBa0JrQkUsUUFsQmxCLEVBa0I0QkQsS0FsQjVCLEVBa0JtQ08sSUFsQm5DO0FBQUE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQW9CREMsZ0JBcEJDLEdBb0JNQyxJQUFJQyxNQXBCVixDQW9CREYsRUFwQkM7QUFBQTtBQUFBLHFCQXFCYUcsUUFBUUMsUUFBUixDQUFpQkosRUFBakIsRUFBcUJLLFFBQXJCLENBQThCLFFBQTlCLENBckJiOztBQUFBO0FBcUJIZCxzQkFyQkc7O0FBQUEsa0JBc0JKQSxRQXRCSTtBQUFBO0FBQUE7QUFBQTs7QUFBQSxnREF1QkFlLElBQUlDLE1BQUosQ0FBV0MsU0FBWCxFQUFzQkMsSUFBdEIsQ0FBMkIsRUFBRUMsS0FBSywyQkFBUCxFQUEzQixDQXZCQTs7QUFBQTtBQUFBLHNDQXlCbUJDLGVBQWVyQixRQUFmLENBQXdCQyxRQUF4QixDQXpCbkIsRUF5QkRFLFNBekJDLHlCQXlCREEsUUF6QkMsRUF5QlNELE1BekJULHlCQXlCU0EsS0F6QlQ7QUEwQkhPLG1CQTFCRyxHQTBCSWEsWUFBWUMsT0FBWixDQUFvQlosSUFBSWEsV0FBeEIsQ0ExQko7QUEyQkhDLDBCQTNCRyxHQTJCWUosZUFBZWIsZUFBZixDQUNuQlAsUUFEbUIsRUFFbkJFLFNBRm1CLEVBR25CRCxNQUhtQixFQUluQk8sS0FKbUIsQ0EzQlo7QUFpQ0hpQixrQkFqQ0csR0FpQ0lMLGVBQWVNLGtCQUFmLENBQWtDRixZQUFsQyxDQWpDSjs7QUFrQ1RULGtCQUFJWSxXQUFKLENBQWdCO0FBQ2RDLDBCQUFhNUIsU0FBUTZCLElBQXJCLFNBRGM7QUFFZEMsNkJBQWFMO0FBRkMsZUFBaEI7QUFsQ1M7QUFBQTs7QUFBQTtBQUFBO0FBQUE7O0FBdUNUTSxzQkFBUUMsS0FBUjtBQXZDUyxnREF3Q0ZqQixJQUFJQyxNQUFKLENBQVcsR0FBWCxFQUFnQkUsSUFBaEIsY0F4Q0U7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7O0FBQUE7QUFBQTtBQUFBOztBQUFBO0FBQUE7QUFBQSxDIiwiZmlsZSI6Imludm9pY2Uuc2VydmljZS5qcyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBkZWZhdWx0IHtcbiAgYXN5bmMgZ2V0VG90YWwoaW52b2ljZSkge1xuICAgIGxldCB0b3RhbCA9IDA7XG4gICAgbGV0IHN1YlRvdGFsID0gMDtcblxuICAgIGlmIChcbiAgICAgIHR5cGVvZiBpbnZvaWNlLnF0eSAhPT0gXCJ1bmRlZmluZWRcIiAmJlxuICAgICAgdHlwZW9mIGludm9pY2UucmF0ZSAhPT0gXCJ1bmRlZmluZWRcIlxuICAgICkge1xuICAgICAgdG90YWwgPSBpbnZvaWNlLnF0eSAqIGludm9pY2UucmF0ZTtcbiAgICB9XG4gICAgbGV0IHNhbGVzVGF4ID0gMDtcbiAgICBpZiAodHlwZW9mIGludm9pY2UudGF4ICE9PSBcInVuZGVmaW5lZFwiKSB7XG4gICAgICBzYWxlc1RheCA9ICh0b3RhbCAqIGludm9pY2UudGF4KSAvIDEwMDtcbiAgICB9XG4gICAgc3ViVG90YWwgPSB0b3RhbCArIHNhbGVzVGF4O1xuICAgIHJldHVybiB7IHRvdGFsLCBzdWJUb3RhbCB9O1xuICB9LFxuICBhc3luYyBnZXRUZW1wbGF0ZUJvZHkoaW52b2ljZSwgc3ViVG90YWwsIHRvdGFsLCB1c2VyKSB7XG4gICAgdHJ5IHtcbiAgICAgIGNvbnN0IHsgaWQgfSA9IHJlcS5wYXJhbXM7XG4gICAgICBjb25zdCBpbnZvaWNlID0gYXdhaXQgSW52b2ljZS5maW5kQnlJZChpZCkucG9wdWxhdGUoXCJjbGllbnRcIik7XG4gICAgICBpZiAoIWludm9pY2UpIHtcbiAgICAgICAgcmV0dXJuIHJlcy5zdGF0dXMoTk9UX0ZPVU5EKS5zZW5kKHsgZXJyOiBcImNvdWxkIG5vdCBmaW5kIGFueSBpbnZpY2VcIiB9KTtcbiAgICAgIH1cbiAgICAgIGNvbnN0IHsgc3ViVG90YWwsIHRvdGFsIH0gPSBpbnZvaWNlU2VydmljZS5nZXRUb3RhbChpbnZvaWNlKTtcbiAgICAgIGNvbnN0IHVzZXIgPSB1c2VyU2VydmljZS5nZXRVc2VyKHJlcS5jdXJyZW50VXNlcik7XG4gICAgICBjb25zdCB0ZW1wbGF0ZUJvZHkgPSBpbnZvaWNlU2VydmljZS5nZXRUZW1wbGF0ZUJvZHkoXG4gICAgICAgIGludm9pY2UsXG4gICAgICAgIHN1YlRvdGFsLFxuICAgICAgICB0b3RhbCxcbiAgICAgICAgdXNlclxuICAgICAgKTtcbiAgICAgIGNvbnN0IGh0bWwgPSBpbnZvaWNlU2VydmljZS5nZXRJbnZvaWNlVGVtcGxhdGUodGVtcGxhdGVCb2R5KTtcbiAgICAgIHJlcy5wZGZGcm9tSFRNTCh7XG4gICAgICAgIGZpbGVuYW1lOiBgJHtpbnZvaWNlLml0ZW19LnBkZmAsXG4gICAgICAgIGh0bWxDb250ZW50OiBodG1sXG4gICAgICB9KTtcbiAgICB9IGNhdGNoIChlcnIpIHtcbiAgICAgIGNvbnNvbGUuZXJyb3IoZXJyKTtcbiAgICAgIHJldHVybiByZXMuc3RhdHVzKDUwMCkuc2VuZChlcnIpO1xuICAgIH1cbiAgfVxufTtcbiJdfQ==
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NyYy9hcGkvcmVzb3VyY2VzL2ludm9pY2UvaW52b2ljZS5zZXJ2aWNlLmpzIl0sIm5hbWVzIjpbImdldFRvdGFsIiwiaW52b2ljZSIsInRvdGFsIiwic3ViVG90YWwiLCJxdHkiLCJyYXRlIiwic2FsZXNUYXgiLCJ0YXgiLCJnZXRUZW1wbGF0ZUJvZHkiLCJ1c2VyIiwidGVtcGxhdGVCb2R5IiwiaXRlbSIsIm5hbWUiLCJlbWFpbCIsImNsaWVudCIsImZpcnN0TmFtZSIsImxhc3ROYW1lIiwiZ2V0SW52b2ljZVRlbXBsYXRlIiwiaHRtbCJdLCJtYXBwaW5ncyI6Ijs7Ozs7a0JBQWU7QUFDYkEsWUFEYSxvQkFDSkMsT0FESSxFQUNLO0FBQ2hCLFlBQUlDLFFBQVEsQ0FBWjtBQUNBLFlBQUlDLFdBQVcsQ0FBZjs7QUFFQSxZQUNFLE9BQU9GLFFBQVFHLEdBQWYsS0FBdUIsV0FBdkIsSUFDQSxPQUFPSCxRQUFRSSxJQUFmLEtBQXdCLFdBRjFCLEVBR0U7QUFDQUgsb0JBQVFELFFBQVFHLEdBQVIsR0FBY0gsUUFBUUksSUFBOUI7QUFDRDtBQUNELFlBQUlDLFdBQVcsQ0FBZjtBQUNBLFlBQUksT0FBT0wsUUFBUU0sR0FBZixLQUF1QixXQUEzQixFQUF3QztBQUN0Q0QsdUJBQVlKLFFBQVFELFFBQVFNLEdBQWpCLEdBQXdCLEdBQW5DO0FBQ0Q7QUFDREosbUJBQVdELFFBQVFJLFFBQW5CO0FBQ0EsZUFBTyxFQUFFSixZQUFGLEVBQVNDLGtCQUFULEVBQVA7QUFDRCxLQWpCWTtBQWtCYkssbUJBbEJhLDJCQWtCR1AsT0FsQkgsRUFrQllFLFFBbEJaLEVBa0JzQkQsS0FsQnRCLEVBa0I2Qk8sSUFsQjdCLEVBa0JtQztBQUM5QyxZQUFNQyxzT0FRYVQsUUFBUVUsSUFSckIsb1FBaUJpQkYsS0FBS0csSUFqQnRCLG9KQXNCY0gsS0FBS0ksS0F0Qm5CLGdVQWdDaUJaLFFBQVFhLE1BQVIsQ0FBZUMsU0FoQ2hDLFNBaUNKZCxRQUFRYSxNQUFSLENBQWVFLFFBakNYLG9KQXVDY2YsUUFBUWEsTUFBUixDQUFlRCxLQXZDN0IscWZBOERVWixRQUFRRyxHQTlEbEIsaUNBK0RVSCxRQUFRSSxJQS9EbEIscURBaUVVSixRQUFRTSxHQWpFbEIsb2JBbUZPSixRQW5GUCw4QkFvRllGLFFBQVFNLEdBcEZwQiw4QkFxRllMLEtBckZaLG9GQUFOO0FBNEZBLGVBQU9RLFlBQVA7QUFDRCxLQWhIWTtBQWlIYk8sc0JBakhhLDhCQWlITVAsWUFqSE4sRUFpSG9CUCxRQWpIcEIsRUFpSDhCRCxLQWpIOUIsRUFpSHFDO0FBQ2hELFlBQU1nQiwyWUFjRFIsWUFkQyxxQ0FBTjtBQWtCQSxlQUFPUSxJQUFQO0FBQ0Q7QUFySVksQyIsImZpbGUiOiJpbnZvaWNlLnNlcnZpY2UuanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCB7XHJcbiAgZ2V0VG90YWwoaW52b2ljZSkge1xyXG4gICAgbGV0IHRvdGFsID0gMDtcclxuICAgIGxldCBzdWJUb3RhbCA9IDA7XHJcblxyXG4gICAgaWYgKFxyXG4gICAgICB0eXBlb2YgaW52b2ljZS5xdHkgIT09IFwidW5kZWZpbmVkXCIgJiZcclxuICAgICAgdHlwZW9mIGludm9pY2UucmF0ZSAhPT0gXCJ1bmRlZmluZWRcIlxyXG4gICAgKSB7XHJcbiAgICAgIHRvdGFsID0gaW52b2ljZS5xdHkgKiBpbnZvaWNlLnJhdGU7XHJcbiAgICB9XHJcbiAgICBsZXQgc2FsZXNUYXggPSAwO1xyXG4gICAgaWYgKHR5cGVvZiBpbnZvaWNlLnRheCAhPT0gXCJ1bmRlZmluZWRcIikge1xyXG4gICAgICBzYWxlc1RheCA9ICh0b3RhbCAqIGludm9pY2UudGF4KSAvIDEwMDtcclxuICAgIH1cclxuICAgIHN1YlRvdGFsID0gdG90YWwgKyBzYWxlc1RheDtcclxuICAgIHJldHVybiB7IHRvdGFsLCBzdWJUb3RhbCB9O1xyXG4gIH0sXHJcbiAgZ2V0VGVtcGxhdGVCb2R5KGludm9pY2UsIHN1YlRvdGFsLCB0b3RhbCwgdXNlcikge1xyXG4gICAgY29uc3QgdGVtcGxhdGVCb2R5ID0gYFxyXG4gICAgPGRpdiBjbGFzcz1cImNvbnRhaW5lclwiPlxyXG4gIDxkaXYgY2xhc3M9XCJyb3dcIj5cclxuICAgICAgPGRpdiBjbGFzcz1cImNvbC14cy02XCI+XHJcbiAgICAgIDwvZGl2PlxyXG4gICAgICA8ZGl2IGNsYXNzPVwiY29sLXhzLTYgdGV4dC1yaWdodFwiPlxyXG4gICAgICAgICAgPGgxPklOVk9JQ0U8L2gxPlxyXG4gICAgICAgICAgPGgxPlxyXG4gICAgICAgICAgICAgIDxzbWFsbD4ke2ludm9pY2UuaXRlbX08L3NtYWxsPlxyXG4gICAgICAgICAgPC9oMT5cclxuICAgICAgPC9kaXY+XHJcbiAgPC9kaXY+XHJcbiAgPGRpdiBjbGFzcz1cInJvd1wiPlxyXG4gICAgICA8ZGl2IGNsYXNzPVwiY29sLXhzLTVcIj5cclxuICAgICAgICAgIDxkaXYgY2xhc3M9XCJwYW5lbCBwYW5lbC1kZWZhdWx0XCI+XHJcbiAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cInBhbmVsLWhlYWRpbmdcIj5cclxuICAgICAgICAgICAgICAgICAgPGg0PkZyb206XHJcbiAgICAgICAgICAgICAgICAgICAgICA8YT4ke3VzZXIubmFtZX08L2E+XHJcbiAgICAgICAgICAgICAgICAgIDwvaDQ+XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cInBhbmVsLWJvZHlcIj5cclxuICAgICAgICAgICAgICAgICAgPHA+XHJcbiAgICAgICAgICAgICAgICAgICAgICAke3VzZXIuZW1haWx9XHJcbiAgICAgICAgICAgICAgICAgICAgICA8YnI+XHJcbiAgICAgICAgICAgICAgICAgIDwvcD5cclxuICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgIDwvZGl2PlxyXG4gICAgICA8L2Rpdj5cclxuICAgICAgPGRpdiBjbGFzcz1cImNvbC14cy01IGNvbC14cy1vZmZzZXQtMiB0ZXh0LXJpZ2h0XCI+XHJcbiAgICAgICAgICA8ZGl2IGNsYXNzPVwicGFuZWwgcGFuZWwtZGVmYXVsdFwiPlxyXG4gICAgICAgICAgICAgIDxkaXYgY2xhc3M9XCJwYW5lbC1oZWFkaW5nXCI+XHJcbiAgICAgICAgICAgICAgICAgIDxoND5UbyA6XHJcbiAgICAgICAgICAgICAgICAgICAgICA8YT4ke2ludm9pY2UuY2xpZW50LmZpcnN0TmFtZX0gJHtcclxuICAgICAgaW52b2ljZS5jbGllbnQubGFzdE5hbWVcclxuICAgIH08L2E+XHJcbiAgICAgICAgICAgICAgICAgIDwvaDQ+XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cInBhbmVsLWJvZHlcIj5cclxuICAgICAgICAgICAgICAgICAgPHA+XHJcbiAgICAgICAgICAgICAgICAgICAgICAke2ludm9pY2UuY2xpZW50LmVtYWlsfVxyXG4gICAgICAgICAgICAgICAgICAgICAgPGJyPlxyXG4gICAgICAgICAgICAgICAgICA8L3A+XHJcbiAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICA8L2Rpdj5cclxuICAgICAgPC9kaXY+XHJcbiAgPC9kaXY+XHJcbiAgPHRhYmxlIGNsYXNzPVwidGFibGUgdGFibGUtYm9yZGVyZWRcIj5cclxuICAgICAgPHRoZWFkPlxyXG4gICAgICAgICAgPHRyPlxyXG4gICAgICAgICAgICAgIDx0aD5cclxuICAgICAgICAgICAgICAgICAgPGg0PlF0eTwvaDQ+XHJcbiAgICAgICAgICAgICAgPC90aD5cclxuICAgICAgICAgICAgICA8dGg+XHJcbiAgICAgICAgICAgICAgICAgIDxoND5SYXRlPC9oND5cclxuICAgICAgICAgICAgICA8L3RoPlxyXG4gICAgICAgICAgICAgIDx0aD5cclxuICAgICAgICAgICAgICAgICAgPGg0PlRheDwvaDQ+XHJcbiAgICAgICAgICAgICAgPC90aD5cclxuICAgICAgICAgIDwvdHI+XHJcbiAgICAgIDwvdGhlYWQ+XHJcbiAgICAgIDx0Ym9keT5cclxuICAgICAgICAgIDx0cj5cclxuICAgICAgICAgICAgICA8dGQ+JHtpbnZvaWNlLnF0eX08L3RkPlxyXG4gICAgICAgICAgICAgIDx0ZD4ke2ludm9pY2UucmF0ZX08L3RkPlxyXG4gICAgICAgICAgICAgIDx0ZD5cclxuICAgICAgICAgICAgICAgICAgJHtpbnZvaWNlLnRheH1cclxuICAgICAgICAgICAgICA8L3RkPlxyXG4gICAgICAgICAgPC90cj5cclxuICAgICAgPC90Ym9keT5cclxuICA8L3RhYmxlPlxyXG4gIDxkaXYgY2xhc3M9XCJyb3cgdGV4dC1yaWdodFwiPlxyXG4gICAgICA8ZGl2IGNsYXNzPVwiY29sLXhzLTIgY29sLXhzLW9mZnNldC04XCI+XHJcbiAgICAgICAgICA8cD5cclxuICAgICAgICAgICAgICA8c3Ryb25nPlxyXG4gICAgICAgICAgICAgICAgICBTdWIgVG90YWwgOlxyXG4gICAgICAgICAgICAgICAgICA8YnI+IFRBWCA6XHJcbiAgICAgICAgICAgICAgICAgIDxicj4gVG90YWwgOlxyXG4gICAgICAgICAgICAgICAgICA8YnI+XHJcbiAgICAgICAgICAgICAgPC9zdHJvbmc+XHJcbiAgICAgICAgICA8L3A+XHJcbiAgICAgIDwvZGl2PlxyXG4gICAgICA8ZGl2IGNsYXNzPVwiY29sLXhzLTJcIj5cclxuICAgICAgICAgIDxzdHJvbmc+XHJcbiAgICAgICAgICAgICAgJCR7c3ViVG90YWx9XHJcbiAgICAgICAgICAgICAgPGJyPiAkJHtpbnZvaWNlLnRheH1cclxuICAgICAgICAgICAgICA8YnI+ICQke3RvdGFsfVxyXG4gICAgICAgICAgICAgIDxicj5cclxuICAgICAgICAgIDwvc3Ryb25nPlxyXG4gICAgICA8L2Rpdj5cclxuICA8L2Rpdj5cclxuPC9kaXY+XHJcbiAgICBgO1xyXG4gICAgcmV0dXJuIHRlbXBsYXRlQm9keTtcclxuICB9LFxyXG4gIGdldEludm9pY2VUZW1wbGF0ZSh0ZW1wbGF0ZUJvZHksIHN1YlRvdGFsLCB0b3RhbCkge1xyXG4gICAgY29uc3QgaHRtbCA9IGBcclxuICAgIDxodG1sPlxyXG4gICAgPGhlYWQ+XHJcbiAgICA8dGl0bGU+IEludm9pY2UgPC90aXRsZT5cclxuICAgIDxsaW5rIGhyZWY9XCJodHRwczovL21heGNkbi5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC8zLjMuNy9jc3MvYm9vdHN0cmFwLm1pbi5jc3NcIiByZWw9XCJzdHlsZXNoZWV0XCI+XHJcbiAgICAgPHN0eWxlPlxyXG4gICAgIEBpbXBvcnQgdXJsKGh0dHA6Ly9mb250cy5nb29nbGVhcGlzLmNvbS9jc3M/ZmFtaWx5PUJyZWUrU2VyaWYpO1xyXG4gICAgIGJvZHksIGgxLCBoMiwgaDMsIGg0LCBoNSwgaDZ7XHJcbiAgICAgZm9udC1mYW1pbHk6ICdCcmVlIFNlcmlmJywgc2VyaWY7XHJcbiAgICAgfVxyXG4gICAgIDwvc3R5bGU+XHJcbiAgICA8L2hlYWQ+XHJcblxyXG4gICAgPGJvZHk+XHJcbiAgICAgICAke3RlbXBsYXRlQm9keX1cclxuICAgIDwvYm9keT5cclxuICAgIDwvaHRtbD5cclxuICAgIGA7XHJcbiAgICByZXR1cm4gaHRtbDtcclxuICB9XHJcbn07XHJcbiJdfQ==

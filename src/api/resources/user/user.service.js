@@ -13,5 +13,36 @@ export default {
       return { error };
     }
     return { value };
+  },
+  getUser(user) {
+    const rsp = {};
+    if (user.local) {
+      if (user.local.email) {
+        rsp.name = user.local.name;
+        rsp.email = user.local.email;
+      }
+    }
+
+    if (user.google) {
+      if (user.google.email) {
+        rsp.name = user.google.displayName;
+        rsp.email = user.google.email;
+      }
+    }
+
+    if (user.github) {
+      if (user.github.email) {
+        rsp.name = user.github.displayName;
+        rsp.email = user.github.email;
+      }
+    }
+    if (user.twitter) {
+      if (user.twitter.email) {
+        rsp.name = user.twitter.displayName;
+        rsp.email = user.twitter.email;
+      }
+    }
+
+    return rsp;
   }
 };
